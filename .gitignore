@@ -1,0 +1,10 @@
+cookies.txt
+*.pdf
+*.zip
+*.mp4
+*.mp3
+*.webm
+*.mkv
+__pycache__/
+.env
+.DS_Store
