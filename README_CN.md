@@ -1,6 +1,8 @@
-# UNSW CSE Scraper
-
 <div align="center">
+
+<img src="assets/logo.png" width="128" alt="UNSW CSE Scraper Logo">
+
+# UNSW CSE Scraper
 
 ![UNSW CSE](https://img.shields.io/badge/UNSW-CSE-FFD700?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Ik0yMiAxMGwtMTAtNS0xMCA1IDEwIDV6Ii8+PHBhdGggZD0iTTIgMTBsMTAgNSAxMC01Ii8+PHBhdGggZD0iTTIgMTd2LTciLz48cGF0aCBkPSJNMjIgMTB2NyIvPjxwYXRoIGQ9Ik02IDEydjUuNWEzIDMgMCAwIDAgNiAxaDBhMyAzIDAgMCAwIDYtMVYxMiIvPjwvc3ZnPg==&logoColor=white)
 ![Course Scraper](https://img.shields.io/badge/课程抓取器-7C3AED?style=for-the-badge)
