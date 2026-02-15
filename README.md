@@ -11,18 +11,47 @@
 
 Universal knowledge base + automation scripts for any AI coding assistant
 
-![Bash](https://img.shields.io/badge/Bash-5.0+-4EAA25?style=flat-square&logo=gnubash&logoColor=white)
-![curl](https://img.shields.io/badge/curl-8.0+-073551?style=flat-square&logo=curl&logoColor=white)
-![yt--dlp](https://img.shields.io/badge/yt--dlp-2024+-FF0000?style=flat-square&logo=youtube&logoColor=white)
+![Claude Code](https://img.shields.io/badge/Claude_Code-orange?style=flat-square&logo=anthropic&logoColor=white)
+![Cursor](https://img.shields.io/badge/Cursor-000?style=flat-square&logo=cursor&logoColor=white)
+![Codex](https://img.shields.io/badge/Codex_CLI-412991?style=flat-square&logo=openai&logoColor=white)
+![Gemini](https://img.shields.io/badge/Gemini_CLI-4285F4?style=flat-square&logo=google&logoColor=white)
+![Windsurf](https://img.shields.io/badge/Windsurf-06B6D4?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
 English | [简体中文](README_CN.md)
 
-[Features](#features) • [Quick Start](#quick-start) • [Course List](#courses-with-public-cgi-sites) • [AI Deployment](#deploy-to-ai-tools) • [Contributing](#contributing)
+[Install](#install) • [Features](#features) • [Quick Start](#quick-start) • [Course List](#courses-with-public-cgi-sites) • [AI Deployment](#deploy-to-ai-tools) • [Contributing](#contributing)
 
 ---
 
 </div>
+
+## Install
+
+**One-liner** (auto-detects your AI tools):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Genius-Cai/unsw-cse-scraper/main/install.sh | bash
+```
+
+**Or clone and install**:
+
+```bash
+git clone https://github.com/Genius-Cai/unsw-cse-scraper.git
+cd unsw-cse-scraper
+./install.sh
+```
+
+**Platform-specific**:
+
+| Platform | Quick Install |
+|----------|---------------|
+| **Claude Code** | `/plugin marketplace add Genius-Cai/unsw-cse-scraper` |
+| **Cursor** | Copy `.cursorrules` to project root |
+| **Codex CLI** | Copy `AGENTS.md` to project root |
+| **Gemini CLI** | `./install.sh --target gemini` |
+| **Windsurf** | `./install.sh --target windsurf` |
+| **All tools** | `./install.sh --target all` |
 
 ## Features
 
@@ -32,7 +61,7 @@ English | [简体中文](README_CN.md)
 - **Past Exams** — Collect sample exams and past papers across terms
 - **YouTube Lectures** — Download video, audio-only (MP3), and subtitles via yt-dlp
 - **WebCMS3** — Access enrolled course resources with browser cookies
-- **AI-Agent Ready** — Drop `KNOWLEDGE.md` into any LLM as a system prompt
+- **AI-Agent Ready** — Native skills for Claude Code, Cursor, Codex, Gemini CLI, and Windsurf
 
 ## How It Works
 
@@ -48,10 +77,6 @@ UNSW CSE runs two independent systems. This tool leverages both:
 ## Quick Start
 
 ```bash
-# Clone
-git clone https://github.com/Genius-Cai/unsw-cse-scraper.git
-cd unsw-cse-scraper
-
 # Scrape a full course (no login needed)
 ./scripts/scrape.sh cs2521 26T1 ~/UNSW/COMP2521
 
@@ -66,10 +91,6 @@ cd unsw-cse-scraper
 ├── lectures/
 │   ├── slides/          # PDF lecture slides
 │   ├── code/            # Source code per week (with solutions)
-│   │   └── wk1-topic/
-│   │       ├── all.zip
-│   │       ├── solution/
-│   │       └── starter/
 │   ├── revision/        # Revision exercise zips
 │   ├── videos/          # YouTube recordings (via yt-dlp)
 │   └── audio/           # Audio-only MP3 (for commute)
@@ -78,6 +99,28 @@ cd unsw-cse-scraper
 ├── assignments/         # Assignment specs (HTML)
 ├── exams/               # Past exams + sample exam
 └── guides/              # Style guide, DSA manual
+```
+
+## Project Structure
+
+```
+unsw-cse-scraper/
+├── .claude-plugin/
+│   └── marketplace.json      # Claude Code plugin registry
+├── skills/
+│   └── unsw-cse/
+│       └── SKILL.md           # Anthropic standard skill format
+├── .cursorrules               # Cursor native rules
+├── .gemini/
+│   └── SKILL.md               # Gemini CLI skill
+├── AGENTS.md                  # Codex CLI agent config
+├── KNOWLEDGE.md               # Universal knowledge base (any LLM)
+├── install.sh                 # One-click installer
+├── scripts/
+│   ├── scrape.sh              # Course scraper
+│   └── download-videos.sh     # YouTube downloader
+└── docs/
+    └── deploy-*.md            # Platform-specific guides
 ```
 
 ## Courses with Public CGI Sites
@@ -127,9 +170,6 @@ For enrolled courses or those without CGI sites:
 brew install yt-dlp  # macOS
 pip install yt-dlp    # or pip
 
-# List playlist contents
-yt-dlp --flat-playlist --print "%(playlist_index)s. %(title)s" "PLAYLIST_URL"
-
 # Download video (1080p)
 ./scripts/download-videos.sh "PLAYLIST_URL" ~/UNSW/COMP2521/lectures/videos video
 
@@ -142,15 +182,37 @@ yt-dlp --flat-playlist --print "%(playlist_index)s. %(title)s" "PLAYLIST_URL"
 
 ## Deploy to AI Tools
 
-Use `KNOWLEDGE.md` as a universal knowledge base for any AI assistant:
+### Quick Install (Recommended)
 
-| Platform | Guide | Method |
-|----------|-------|--------|
-| **Claude Code** | [deploy-claude-code.md](docs/deploy-claude-code.md) | Copy to `~/.claude/skills/` |
-| **Codex CLI** | [deploy-codex.md](docs/deploy-codex.md) | Add as `AGENTS.md` |
-| **Gemini** | [deploy-gemini.md](docs/deploy-gemini.md) | System instruction |
-| **ChatGPT** | [deploy-chatgpt.md](docs/deploy-chatgpt.md) | Custom GPT or file upload |
-| **Cursor / Windsurf** | [deploy-cursor.md](docs/deploy-cursor.md) | `.cursorrules` file |
+```bash
+./install.sh              # auto-detect tools
+./install.sh --target all # install for everything
+```
+
+### Manual Install
+
+| Platform | Method | File |
+|----------|--------|------|
+| **Claude Code** | `cp -r skills/unsw-cse ~/.claude/skills/` | `skills/unsw-cse/SKILL.md` |
+| **Cursor** | `cp .cursorrules ~/your-project/` | `.cursorrules` |
+| **Codex CLI** | `cp AGENTS.md ~/your-project/` | `AGENTS.md` |
+| **Gemini CLI** | `cp -r .gemini/SKILL.md ~/.gemini/skills/unsw-cse/` | `.gemini/SKILL.md` |
+| **Windsurf** | `cp .cursorrules ~/your-project/.windsurfrules` | `.cursorrules` |
+| **ChatGPT** | Upload `KNOWLEDGE.md` as file | `KNOWLEDGE.md` |
+| **Any LLM** | Paste `KNOWLEDGE.md` as system prompt | `KNOWLEDGE.md` |
+
+<details>
+<summary><b>Detailed platform guides</b></summary>
+
+| Platform | Guide |
+|----------|-------|
+| Claude Code | [deploy-claude-code.md](docs/deploy-claude-code.md) |
+| Codex CLI | [deploy-codex.md](docs/deploy-codex.md) |
+| Gemini | [deploy-gemini.md](docs/deploy-gemini.md) |
+| ChatGPT | [deploy-chatgpt.md](docs/deploy-chatgpt.md) |
+| Cursor / Windsurf | [deploy-cursor.md](docs/deploy-cursor.md) |
+
+</details>
 
 ## Troubleshooting
 

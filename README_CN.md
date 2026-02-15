@@ -11,18 +11,47 @@
 
 通用知识库 + 自动化脚本，兼容任何 AI 编程助手
 
-![Bash](https://img.shields.io/badge/Bash-5.0+-4EAA25?style=flat-square&logo=gnubash&logoColor=white)
-![curl](https://img.shields.io/badge/curl-8.0+-073551?style=flat-square&logo=curl&logoColor=white)
-![yt--dlp](https://img.shields.io/badge/yt--dlp-2024+-FF0000?style=flat-square&logo=youtube&logoColor=white)
+![Claude Code](https://img.shields.io/badge/Claude_Code-orange?style=flat-square&logo=anthropic&logoColor=white)
+![Cursor](https://img.shields.io/badge/Cursor-000?style=flat-square&logo=cursor&logoColor=white)
+![Codex](https://img.shields.io/badge/Codex_CLI-412991?style=flat-square&logo=openai&logoColor=white)
+![Gemini](https://img.shields.io/badge/Gemini_CLI-4285F4?style=flat-square&logo=google&logoColor=white)
+![Windsurf](https://img.shields.io/badge/Windsurf-06B6D4?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
 
 [English](README.md) | 简体中文
 
-[功能](#功能) • [快速开始](#快速开始) • [课程列表](#公开-cgi-站点的课程) • [AI 部署](#部署到-ai-工具) • [贡献](#贡献)
+[安装](#安装) • [功能](#功能) • [快速开始](#快速开始) • [课程列表](#公开-cgi-站点的课程) • [AI 部署](#部署到-ai-工具) • [贡献](#贡献)
 
 ---
 
 </div>
+
+## 安装
+
+**一键安装** (自动检测已安装的 AI 工具):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Genius-Cai/unsw-cse-scraper/main/install.sh | bash
+```
+
+**或克隆安装**:
+
+```bash
+git clone https://github.com/Genius-Cai/unsw-cse-scraper.git
+cd unsw-cse-scraper
+./install.sh
+```
+
+**按平台安装**:
+
+| 平台 | 快速安装 |
+|------|----------|
+| **Claude Code** | `/plugin marketplace add Genius-Cai/unsw-cse-scraper` |
+| **Cursor** | 复制 `.cursorrules` 到项目根目录 |
+| **Codex CLI** | 复制 `AGENTS.md` 到项目根目录 |
+| **Gemini CLI** | `./install.sh --target gemini` |
+| **Windsurf** | `./install.sh --target windsurf` |
+| **所有工具** | `./install.sh --target all` |
 
 ## 功能
 
@@ -32,7 +61,7 @@
 - **Past Exams** — 收集历年试卷和 sample exam
 - **YouTube Lectures** — 通过 yt-dlp 下载视频、纯音频 (MP3)、字幕
 - **WebCMS3** — 使用浏览器 cookies 访问已注册课程资源
-- **AI 工具兼容** — 将 `KNOWLEDGE.md` 作为任何 LLM 的知识库
+- **AI 工具原生支持** — Claude Code、Cursor、Codex、Gemini CLI、Windsurf 原生 skill 文件
 
 ## 原理
 
@@ -48,10 +77,6 @@ UNSW CSE 有两套独立系统：
 ## 快速开始
 
 ```bash
-# 克隆
-git clone https://github.com/Genius-Cai/unsw-cse-scraper.git
-cd unsw-cse-scraper
-
 # 一键抓取课程 (无需登录)
 ./scripts/scrape.sh cs2521 26T1 ~/UNSW/COMP2521
 
@@ -66,10 +91,6 @@ cd unsw-cse-scraper
 ├── lectures/
 │   ├── slides/          # PDF 课件
 │   ├── code/            # 每周源代码 (含 solutions)
-│   │   └── wk1-topic/
-│   │       ├── all.zip
-│   │       ├── solution/
-│   │       └── starter/
 │   ├── revision/        # 复习练习 zips
 │   ├── videos/          # YouTube 录播 (yt-dlp)
 │   └── audio/           # 纯音频 MP3 (通勤听课)
@@ -78,6 +99,28 @@ cd unsw-cse-scraper
 ├── assignments/         # Assignment 规格 (HTML)
 ├── exams/               # 历年试卷 + sample exam
 └── guides/              # Style guide, DSA 手册
+```
+
+## 项目结构
+
+```
+unsw-cse-scraper/
+├── .claude-plugin/
+│   └── marketplace.json      # Claude Code 插件注册
+├── skills/
+│   └── unsw-cse/
+│       └── SKILL.md           # Anthropic 标准 skill 格式
+├── .cursorrules               # Cursor 原生规则
+├── .gemini/
+│   └── SKILL.md               # Gemini CLI skill
+├── AGENTS.md                  # Codex CLI agent 配置
+├── KNOWLEDGE.md               # 通用知识库 (任何 LLM)
+├── install.sh                 # 一键安装脚本
+├── scripts/
+│   ├── scrape.sh              # 课程抓取器
+│   └── download-videos.sh     # YouTube 下载器
+└── docs/
+    └── deploy-*.md            # 各平台部署指南
 ```
 
 ## 公开 CGI 站点的课程
@@ -127,9 +170,6 @@ COMP6452, COMP9319, COMP9417, COMP9444, COMP9517
 brew install yt-dlp  # macOS
 pip install yt-dlp    # 或 pip
 
-# 列出 playlist 内容
-yt-dlp --flat-playlist --print "%(playlist_index)s. %(title)s" "PLAYLIST_URL"
-
 # 下载视频 (1080p)
 ./scripts/download-videos.sh "PLAYLIST_URL" ~/UNSW/COMP2521/lectures/videos video
 
@@ -142,15 +182,37 @@ yt-dlp --flat-playlist --print "%(playlist_index)s. %(title)s" "PLAYLIST_URL"
 
 ## 部署到 AI 工具
 
-将 `KNOWLEDGE.md` 作为通用知识库加载到任何 AI 助手中：
+### 快速安装 (推荐)
 
-| 平台 | 指南 | 方式 |
+```bash
+./install.sh              # 自动检测工具
+./install.sh --target all # 安装到所有工具
+```
+
+### 手动安装
+
+| 平台 | 方式 | 文件 |
 |------|------|------|
-| **Claude Code** | [deploy-claude-code.md](docs/deploy-claude-code.md) | 复制到 `~/.claude/skills/` |
-| **Codex CLI** | [deploy-codex.md](docs/deploy-codex.md) | 添加为 `AGENTS.md` |
-| **Gemini** | [deploy-gemini.md](docs/deploy-gemini.md) | 系统指令 |
-| **ChatGPT** | [deploy-chatgpt.md](docs/deploy-chatgpt.md) | 自定义 GPT 或文件上传 |
-| **Cursor / Windsurf** | [deploy-cursor.md](docs/deploy-cursor.md) | `.cursorrules` 文件 |
+| **Claude Code** | `cp -r skills/unsw-cse ~/.claude/skills/` | `skills/unsw-cse/SKILL.md` |
+| **Cursor** | `cp .cursorrules ~/your-project/` | `.cursorrules` |
+| **Codex CLI** | `cp AGENTS.md ~/your-project/` | `AGENTS.md` |
+| **Gemini CLI** | `cp -r .gemini/SKILL.md ~/.gemini/skills/unsw-cse/` | `.gemini/SKILL.md` |
+| **Windsurf** | `cp .cursorrules ~/your-project/.windsurfrules` | `.cursorrules` |
+| **ChatGPT** | 上传 `KNOWLEDGE.md` 为文件 | `KNOWLEDGE.md` |
+| **任何 LLM** | 粘贴 `KNOWLEDGE.md` 为 system prompt | `KNOWLEDGE.md` |
+
+<details>
+<summary><b>详细部署指南</b></summary>
+
+| 平台 | 指南 |
+|------|------|
+| Claude Code | [deploy-claude-code.md](docs/deploy-claude-code.md) |
+| Codex CLI | [deploy-codex.md](docs/deploy-codex.md) |
+| Gemini | [deploy-gemini.md](docs/deploy-gemini.md) |
+| ChatGPT | [deploy-chatgpt.md](docs/deploy-chatgpt.md) |
+| Cursor / Windsurf | [deploy-cursor.md](docs/deploy-cursor.md) |
+
+</details>
 
 ## 常见问题
 

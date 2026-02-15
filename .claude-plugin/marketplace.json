@@ -1,0 +1,12 @@
+{
+  "name": "unsw-cse-scraper",
+  "description": "UNSW CSE course material scraper",
+  "skills": [
+    {
+      "name": "unsw-cse",
+      "path": "skills/unsw-cse",
+      "description": "Scrape UNSW CSE course materials",
+      "version": "1.0.0"
+    }
+  ]
+}
