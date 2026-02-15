@@ -1,18 +1,47 @@
-# UNSW CSE Course Scraper
+# UNSW CSE Scraper
 
-> Scrape lecture slides, code, tutorials, labs, exams, and YouTube recordings from UNSW CSE course websites.
+<div align="center">
 
-A universal knowledge base + automation scripts for downloading UNSW Computer Science & Engineering course materials. Works standalone or as a plugin for AI coding assistants (Claude Code, Codex CLI, Gemini, ChatGPT, Cursor, etc.).
+![UNSW CSE](https://img.shields.io/badge/UNSW-CSE-FFD700?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Ik0yMiAxMGwtMTAtNS0xMCA1IDEwIDV6Ii8+PHBhdGggZD0iTTIgMTBsMTAgNSAxMC01Ii8+PHBhdGggZD0iTTIgMTd2LTciLz48cGF0aCBkPSJNMjIgMTB2NyIvPjxwYXRoIGQ9Ik02IDEydjUuNWEzIDMgMCAwIDAgNiAxaDBhMyAzIDAgMCAwIDYtMVYxMiIvPjwvc3ZnPg==&logoColor=white)
+![Course Scraper](https://img.shields.io/badge/Course_Scraper-7C3AED?style=for-the-badge)
+
+**Bulk download lecture slides, code, tutorials, exams, and YouTube recordings from UNSW CSE courses**
+
+Universal knowledge base + automation scripts for any AI coding assistant
+
+![Bash](https://img.shields.io/badge/Bash-5.0+-4EAA25?style=flat-square&logo=gnubash&logoColor=white)
+![curl](https://img.shields.io/badge/curl-8.0+-073551?style=flat-square&logo=curl&logoColor=white)
+![yt--dlp](https://img.shields.io/badge/yt--dlp-2024+-FF0000?style=flat-square&logo=youtube&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
+
+English | [简体中文](README_CN.md)
+
+[Features](#features) • [Quick Start](#quick-start) • [Course List](#courses-with-public-cgi-sites) • [AI Deployment](#deploy-to-ai-tools) • [Contributing](#contributing)
+
+---
+
+</div>
 
 ## Features
 
-- **Lecture slides** — Bulk download PDFs from any course with a CGI site
-- **Lecture code** — Download source code, starter files, and solutions
-- **Tutorials & Labs** — Save all question pages as HTML
-- **Past exams** — Collect sample exams and past papers
-- **YouTube lectures** — Download video/audio/subtitles via yt-dlp
-- **WebCMS3 integration** — Access enrolled course resources with cookies
-- **AI-agent ready** — Drop-in knowledge file for any LLM tool
+- **Lecture Slides** — Bulk download PDFs from any course with a public CGI site
+- **Lecture Code** — Source code, starter files, and solutions per week
+- **Tutorials & Labs** — Save all question pages as offline HTML
+- **Past Exams** — Collect sample exams and past papers across terms
+- **YouTube Lectures** — Download video, audio-only (MP3), and subtitles via yt-dlp
+- **WebCMS3** — Access enrolled course resources with browser cookies
+- **AI-Agent Ready** — Drop `KNOWLEDGE.md` into any LLM as a system prompt
+
+## How It Works
+
+UNSW CSE runs two independent systems. This tool leverages both:
+
+| System | URL | Auth | Persistence |
+|--------|-----|------|-------------|
+| **CGI Sites** | `cgi.cse.unsw.edu.au/~cs{code}/{term}/` | **None** (public) | Past terms preserved |
+| **WebCMS3** | `webcms3.cse.unsw.edu.au/COMP{CODE}/{term}/` | Cookies required | Current term only |
+
+> CGI sites are **official** UNSW CSE course pages maintained by lecturers. Public access is by design.
 
 ## Quick Start
 
@@ -21,59 +50,27 @@ A universal knowledge base + automation scripts for downloading UNSW Computer Sc
 git clone https://github.com/Genius-Cai/unsw-cse-scraper.git
 cd unsw-cse-scraper
 
-# Scrape a course (no login needed for CGI courses)
+# Scrape a full course (no login needed)
 ./scripts/scrape.sh cs2521 26T1 ~/UNSW/COMP2521
 
-# Download YouTube lectures
-./scripts/download-videos.sh "https://www.youtube.com/playlist?list=PLxxx" ~/UNSW/COMP2521/lectures/videos
+# Download YouTube lecture playlist
+./scripts/download-videos.sh "PLAYLIST_URL" ~/UNSW/COMP2521/lectures/videos
 ```
 
-## How It Works
-
-UNSW CSE uses two independent systems:
-
-| System | URL | Auth | Content |
-|--------|-----|------|---------|
-| **CGI Sites** | `cgi.cse.unsw.edu.au/~cs{code}/{term}/` | None (public) | Slides, code, tutorials, labs, exams |
-| **WebCMS3** | `webcms3.cse.unsw.edu.au/COMP{CODE}/{term}/` | Cookies required | Announcements, grades, resources |
-
-CGI sites are official course websites maintained by lecturers with Apache directory listings. Not all courses have them — see the [course list](#courses-with-public-cgi-sites) below.
-
-## Courses with Public CGI Sites
-
-✅ = public slides/code available, no login needed
-
-| Course | Name | Available Terms |
-|--------|------|-----------------|
-| ✅ COMP1511 | Programming Fundamentals | 26T1, 25T3, 25T1 |
-| ✅ COMP1521 | Computer Systems Fundamentals | 26T1, 25T3, 25T1 |
-| ✅ COMP2041 | Software Construction | 26T1, 25T1 |
-| ✅ COMP2521 | Data Structures and Algorithms | 26T1, 25T3, 25T1 |
-| ✅ COMP3131 | Programming Languages and Compilers | 26T1, 25T1 |
-| ✅ COMP3161 | Concepts of Programming Languages | 25T3 |
-| ✅ COMP3222 | Digital Circuits and Systems | 26T1, 25T1 |
-| ✅ COMP3311 | Database Systems | 26T1, 25T1 |
-| ✅ COMP3411 | Artificial Intelligence | 26T1, 25T1 |
-| ✅ COMP6080 | Web Front-End Programming | 26T1, 25T3, 25T1 |
-| ✅ COMP9024 | Data Structures and Algorithms (PG) | 26T1, 25T3, 25T1 |
-| ✅ COMP9311 | Database Systems (PG) | 26T1, 25T3, 25T1 |
-| ✅ COMP9315 | DBMS Implementation | 26T1, 25T1 |
-| ✅ COMP9020 | Foundations of Computer Science | 25T3 |
-| ✅ COMP9242 | Advanced Operating Systems | 25T3 |
-| ✅ COMP9334 | Capacity Planning | 25T1 |
-
-❌ **WebCMS3 only** (needs enrollment): COMP1531, COMP2511, COMP3141, COMP3231, COMP3331, COMP3900, COMP6443, COMP9417, COMP9444, COMP9517, and others.
-
-## Output Structure
+### Output Structure
 
 ```
 ~/UNSW/COMP2521/
 ├── lectures/
 │   ├── slides/          # PDF lecture slides
 │   ├── code/            # Source code per week (with solutions)
+│   │   └── wk1-topic/
+│   │       ├── all.zip
+│   │       ├── solution/
+│   │       └── starter/
 │   ├── revision/        # Revision exercise zips
-│   ├── videos/          # YouTube recordings
-│   └── audio/           # Audio-only (for commute)
+│   ├── videos/          # YouTube recordings (via yt-dlp)
+│   └── audio/           # Audio-only MP3 (for commute)
 ├── tutorials/           # Tutorial questions (HTML)
 ├── labs/                # Lab questions (HTML)
 ├── assignments/         # Assignment specs (HTML)
@@ -81,44 +78,77 @@ CGI sites are official course websites maintained by lecturers with Apache direc
 └── guides/              # Style guide, DSA manual
 ```
 
-## WebCMS3 Access (Optional)
+## Courses with Public CGI Sites
 
-For courses without CGI sites, or to access announcements/grades/forum:
+Verified **February 2026**. No login needed for these courses:
 
-1. Install a browser extension: [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc)
+| Course | Name | Terms |
+|--------|------|-------|
+| COMP1511 | Programming Fundamentals | 26T1, 25T3, 25T1 |
+| COMP1521 | Computer Systems Fundamentals | 26T1, 25T3, 25T1 |
+| COMP2041 | Software Construction | 26T1, 25T1 |
+| COMP2521 | Data Structures and Algorithms | 26T1, 25T3, 25T1 |
+| COMP3131 | Programming Languages and Compilers | 26T1, 25T1 |
+| COMP3161 | Concepts of Programming Languages | 25T3 |
+| COMP3222 | Digital Circuits and Systems | 26T1, 25T1 |
+| COMP3311 | Database Systems | 26T1, 25T1 |
+| COMP3411 | Artificial Intelligence | 26T1, 25T1 |
+| COMP6080 | Web Front-End Programming | 26T1, 25T3, 25T1 |
+| COMP9024 | Data Structures & Algo (PG) | 26T1, 25T3, 25T1 |
+| COMP9311 | Database Systems (PG) | 26T1, 25T3, 25T1 |
+| COMP9315 | DBMS Implementation | 26T1, 25T1 |
+| COMP9020 | Foundations of CS | 25T3 |
+| COMP9242 | Advanced Operating Systems | 25T3 |
+| COMP9334 | Capacity Planning | 25T1 |
+
+<details>
+<summary><b>Courses WITHOUT CGI sites</b> (WebCMS3 only, needs enrollment)</summary>
+
+COMP1531, COMP2121, COMP2511, COMP3141, COMP3153, COMP3211, COMP3231,
+COMP3331, COMP3421, COMP3900, COMP4336, COMP4511, COMP6443, COMP6451,
+COMP6452, COMP9319, COMP9417, COMP9444, COMP9517
+
+</details>
+
+## WebCMS3 Access
+
+For enrolled courses or those without CGI sites:
+
+1. Install [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc) browser extension
 2. Log in to [webcms3.cse.unsw.edu.au](https://webcms3.cse.unsw.edu.au)
-3. Export cookies as Netscape format to `~/UNSW/cookies.txt`
-4. Use with curl: `curl -b ~/UNSW/cookies.txt "https://webcms3.cse.unsw.edu.au/COMP2521/26T1/"`
+3. Export cookies → save as `~/UNSW/cookies.txt`
+4. Use: `curl -b ~/UNSW/cookies.txt "https://webcms3.cse.unsw.edu.au/COMP2521/26T1/"`
 
-## YouTube Lecture Downloads
-
-Requires [yt-dlp](https://github.com/yt-dlp/yt-dlp):
+## YouTube Lectures
 
 ```bash
 brew install yt-dlp  # macOS
-pip install yt-dlp    # or via pip
+pip install yt-dlp    # or pip
 
-# List videos in a playlist
+# List playlist contents
 yt-dlp --flat-playlist --print "%(playlist_index)s. %(title)s" "PLAYLIST_URL"
 
-# Download all videos (1080p)
+# Download video (1080p)
 ./scripts/download-videos.sh "PLAYLIST_URL" ~/UNSW/COMP2521/lectures/videos video
 
-# Audio only (MP3, for commute listening)
+# Audio only (MP3, great for commute)
 ./scripts/download-videos.sh "PLAYLIST_URL" ~/UNSW/COMP2521/lectures/audio audio
+
+# Both video + audio
+./scripts/download-videos.sh "PLAYLIST_URL" ~/UNSW/COMP2521/lectures/videos both
 ```
 
 ## Deploy to AI Tools
 
-Use `KNOWLEDGE.md` as a knowledge base / system prompt for any AI assistant:
+Use `KNOWLEDGE.md` as a universal knowledge base for any AI assistant:
 
-| Tool | Guide |
-|------|-------|
-| Claude Code | [docs/deploy-claude-code.md](docs/deploy-claude-code.md) |
-| OpenAI Codex CLI | [docs/deploy-codex.md](docs/deploy-codex.md) |
-| Gemini CLI / AI Studio | [docs/deploy-gemini.md](docs/deploy-gemini.md) |
-| ChatGPT / Custom GPT | [docs/deploy-chatgpt.md](docs/deploy-chatgpt.md) |
-| Cursor / Windsurf / IDEs | [docs/deploy-cursor.md](docs/deploy-cursor.md) |
+| Platform | Guide | Method |
+|----------|-------|--------|
+| **Claude Code** | [deploy-claude-code.md](docs/deploy-claude-code.md) | Copy to `~/.claude/skills/` |
+| **Codex CLI** | [deploy-codex.md](docs/deploy-codex.md) | Add as `AGENTS.md` |
+| **Gemini** | [deploy-gemini.md](docs/deploy-gemini.md) | System instruction |
+| **ChatGPT** | [deploy-chatgpt.md](docs/deploy-chatgpt.md) | Custom GPT or file upload |
+| **Cursor / Windsurf** | [deploy-cursor.md](docs/deploy-cursor.md) | `.cursorrules` file |
 
 ## Troubleshooting
 
@@ -126,78 +156,30 @@ Use `KNOWLEDGE.md` as a knowledge base / system prompt for any AI assistant:
 |---------|----------|
 | 403 on CGI | Resource is auth-protected (labs, exams, autotest) |
 | 404 on WebCMS3 | Past terms get deleted; only current term exists |
-| Can't find slides | Paths vary: try `lectures/slides/`, `lectures/`, `slides/`, `Lectures/` |
-| Empty directory | Term just started; content uploads incrementally. Try previous term. |
+| Can't find slides | Paths vary by lecturer — the script tries 5 common paths automatically |
+| Empty directory | Term just started; try previous term instead |
 | yt-dlp fails | Try `--cookies-from-browser chrome` for unlisted videos |
-| Cookie expired | Re-export from browser. `remember_token` lasts ~1 year. |
+| Cookie expired | Re-export from browser. `remember_token` lasts ~1 year |
 
 ## Contributing
 
-Contributions welcome! If you find new course CGI sites, updated slide paths, or better scraping methods:
+Contributions welcome! Especially:
 
-1. Fork this repo
-2. Add your changes
-3. Submit a PR
+- **New course discoveries** — Found a CGI site not listed? Open a PR!
+- **Slide path updates** — Lecturers change paths each term
+- **Script improvements** — Better error handling, new features
+- **More AI platform guides** — Deployment docs for other tools
 
-Please help keep the course list up to date each term.
+```bash
+fork → edit → PR
+```
 
 ## Author
 
 **Steven Cai** ([@Genius-Cai](https://github.com/Genius-Cai))
+
 UNSW Computer Science
 
 ## License
 
-MIT
-
----
-
-# UNSW CSE 课程资料抓取器
-
-> 批量下载 UNSW CSE 课程的 lecture slides、代码、tutorials、labs、考试和 YouTube 录播。
-
-通用知识库 + 自动化脚本，支持直接使用或作为 AI 编程助手插件 (Claude Code, Codex CLI, Gemini, ChatGPT, Cursor 等)。
-
-## 功能
-
-- **Lecture slides** — 批量下载 PDF 课件
-- **Lecture code** — 下载源代码、starter files 和 solutions
-- **Tutorials & Labs** — 保存所有题目页面
-- **Past exams** — 收集历年试卷
-- **YouTube lectures** — 通过 yt-dlp 下载视频/音频/字幕
-- **WebCMS3** — 使用 cookies 访问已注册课程资源
-- **AI 工具兼容** — 可直接作为任何 LLM 的知识库
-
-## 快速开始
-
-```bash
-git clone https://github.com/Genius-Cai/unsw-cse-scraper.git
-cd unsw-cse-scraper
-
-# 抓取课程 (CGI 课程不需要登录)
-./scripts/scrape.sh cs2521 26T1 ~/UNSW/COMP2521
-
-# 下载 YouTube 录播
-./scripts/download-videos.sh "PLAYLIST_URL" ~/UNSW/COMP2521/lectures/videos
-```
-
-## 原理
-
-UNSW CSE 有两套独立系统：
-- **CGI 站** (`cgi.cse.unsw.edu.au`) — 公开，无需登录，Apache 目录浏览
-- **WebCMS3** (`webcms3.cse.unsw.edu.au`) — 需要 cookies，只保留当前学期
-
-不是所有课程都有 CGI 站，详见上方[课程列表](#courses-with-public-cgi-sites)。
-
-## 部署到 AI 工具
-
-将 `KNOWLEDGE.md` 作为知识库 / system prompt 加载到你的 AI 助手中。详见 `docs/` 目录下的部署指南。
-
-## 作者
-
-**Steven Cai** ([@Genius-Cai](https://github.com/Genius-Cai))
-UNSW 计算机科学
-
-## 协议
-
-MIT
+[MIT](LICENSE)
